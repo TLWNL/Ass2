@@ -1,3 +1,5 @@
+package src;
+
 public class Identifier implements IdentInterface {
     private StringBuffer sb = new StringBuffer();
     public Identifier(){
@@ -24,6 +26,10 @@ public class Identifier implements IdentInterface {
         sb.append(c);
     }
 
+    public void remove(int i){
+        sb.deleteCharAt(i);
+    }
+
     public String getIdent(){
         return 	sb.toString();
     }
@@ -39,4 +45,3 @@ public class Identifier implements IdentInterface {
             return false;
     }
 }
-

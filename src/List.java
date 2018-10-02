@@ -1,3 +1,5 @@
+package src;
+
 public class List<E extends Comparable> implements ListInterface<E>{
 
     private class Node {
