@@ -1,6 +1,10 @@
 package src;
 
 public class List<E extends Comparable> implements ListInterface<E>{
+    private Node head;
+    private Node tail;
+    private int size;
+
 
     private class Node {
 
@@ -22,7 +26,10 @@ public class List<E extends Comparable> implements ListInterface<E>{
 
     @Override
     public boolean isEmpty() {
-        return false;
+        if(size == 0)
+            return true;
+        else
+            return false;
     }
 
     @Override
