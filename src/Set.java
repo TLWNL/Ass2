@@ -7,7 +7,7 @@ public class Set<E extends Comparable> implements SetInterface {
     // MUY IMPORTANTE! Is Set checked or unchecked?! I hereby assume that it is checked.
     // This intuition is based on the fact that our calculator ONLY does operations on BigInts. So we should
     // def check if there is for example a string input, as that should be rejected.
-    public Set(){
+    public Set(E set){
     //Class<E> set as param
     }
 

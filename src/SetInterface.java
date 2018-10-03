@@ -1,36 +1,33 @@
 package src;
-
-/**@elements : objects of type E
- * @structure : linear
- * @domain : ??!!
+/*
+ * elements: objects of type E
+ * structure: linear
+ * domain: All rows of elements of type E.
  *
- * @constructor : Set(Class<E> set);
- * <dl>
- *     <dt><b>PRE-condition</b></dt>    -
- *     <dt><b>POST-condition</b></dt>   The new Set object of type E is empty
- * </dl>
- *
- * @param <E>
- **/
+ * constructor:
+ * Set();
+ * @precondition -
+ * @postcondition - The new Set-object is empty
+ */
 
 public interface SetInterface<E extends Comparable> {
-    void initSet();
+    Set<E> initSet();
     /*
      * @precondition -
      * @postcondition - The set has been emptied
      */
 
-    void add(E toAdd);
-    /* CHANGE TO BOOLEAN
+    boolean add(E l);
+    /*
      * @precondition -
-     * @postcondition - TRUE: E toAdd has been added to the set
-     *                  FALSE: E toAdd has not been added to the set
+     * @postcondition - TRUE: Element l has been added to the set
+     *                  FALSE: Element l has not been added to the set
      */
 
     void printSet();
     /*
      * @precondition -
-     * @postcondition - The Set has been printed out
+     * @postcondition - The set has been printed out
      *
      */
 
@@ -41,7 +38,7 @@ public interface SetInterface<E extends Comparable> {
      */
 
     boolean remove(int i);
-    /* CHANGE TO BOOLEAN
+    /*
      * @precondition -
      * @postcondition - TRUE: The element at index i of the set has been removed
      *                  FALSE: The element at index i of the set has not been removed
@@ -54,40 +51,40 @@ public interface SetInterface<E extends Comparable> {
      *                  FALSE: The set is not empty
      */
 
-    //StringBuffer get(int i);
+    String get(int i);
     /*
      * @precondition -
-     * @postcondition - Returns element i of the set in the form of a StringBuffer
+     * @postcondition - Returns element i of the set in the form of a String
      */
 
-    Set difference(Set set2);
+    Set<E> difference(Set set2);
     /*
      * @precondition -
      * @postcondition - The difference between Set 1 and Set 2 has been calculated and returned
      */
 
-    Set intersection(Set set2);
+    Set<E> intersection(Set set2);
     /*
      * @precondition -
      * @postcondition - The intersection between Set 1 and Set 2 has been calculated and returned
      */
 
-    Set union(Set set);
+    Set<E> union(Set set);
     /*
      * @precondition -
      * @postcondition - The union between Set 1 and Set 2 has been calculated and returned
      */
 
-    Set symmetricDifference(Set set2);
+    Set<E> symmetricDifference(Set set2);
     /*
      * @precondition -
      * @postcondition - The symmetric difference between Set 1 and Set 2 has been calculated and returned
      */
 
-    public boolean contains(E src);
-    /* CHANGE TO CONTAINS
+    boolean contains(E l);
+    /*
      * @precondition -
-     * @postcondition - TRUE: The set contains the E src
-     *                - FALSE: The set does not contain the E src
+     * @postcondition - TRUE: The set contains the Element l
+     *                - FALSE: The set does not contain the Element l
      */
 }
