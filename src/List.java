@@ -24,66 +24,76 @@ public class List<E extends Comparable> implements ListInterface<E>{
 
     }
 
-    @Override
-    public boolean isEmpty() {
-        if(size == 0)
-            return true;
-        else
-            return false;
+    class List<E extends Comparable<E>> implements ListInterface<E> {
+
+        private class Node {
+            E data;
+            Node prior,
+                    next;
+
+            public Node (E data, Node prior, Node next) {
+                this.data = data;
+                this.prior = prior;
+                this.next = next;
+            }
+
+            public Node(E data) {
+                this(data, null, null);
+            }
+        }
+
+        public List () {
+        }
+
+
+        public boolean isEmpty () {
+        }
+
+
+        public List<E> init () {
+        }
+
+
+        public List<E> copy () {
+        }
+
+
+        public int size () {
+        }
+
+
+        public List<E> insert (E d) {
+        }
+
+
+        public E retrieve () {
+        }
+
+
+        public List<E> remove () {
+        }
+
+
+        public boolean find (E d) {
+        }
+
+
+        public boolean goToFirst () {
+        }
+
+
+        public boolean goToLast () {
+        }
+
+
+        public boolean goToNext () {
+        }
+
+
+        public boolean goToPrevious () {
+        }
+
     }
 
-    @Override
-    public ListInterface<E> init() {
-        return null;
-    }
 
-    @Override
-    public int size() {
-        return 0;
-    }
-
-    @Override
-    public ListInterface<E> insert(E d) {
-        return null;
-    }
-
-    @Override
-    public E retrieve() {
-        return null;
-    }
-
-    @Override
-    public ListInterface<E> remove() {
-        return null;
-    }
-
-    @Override
-    public boolean find(E d) {
-        return false;
-    }
-
-    @Override
-    public boolean goToFirst() {
-        return false;
-    }
-
-    @Override
-    public boolean goToLast() {
-        return false;
-    }
-
-    @Override
-    public boolean goToNext() {
-        return false;
-    }
-
-    @Override
-    public boolean goToPrevious() {
-        return false;
-    }
-
-    @Override
-    public ListInterface<E> copy() {
-        return null;
-    }
 }
