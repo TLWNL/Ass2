@@ -1,52 +1,36 @@
 package src;
 
-public class Set<E extends Comparable> implements SetInterface {
-    //private static final int MAX_NUM_OF_ELEMENTS = 10;
-    //private int size;
-    //private E set;
-    // MUY IMPORTANTE! Is Set checked or unchecked?! I hereby assume that it is checked.
-    // This intuition is based on the fact that our calculator ONLY does operations on BigInts. So we should
-    // def check if there is for example a string input, as that should be rejected.
-    public Set(E set){
-    //Class<E> set as param
-    }
+public class Set<E extends Comparable> implements SetInterface<E> {
+    private int size;
+    private E set;
 
-    public Set(Set src) {
-
-    }
-
-    public boolean contains(Identifier src) {
-
-        return false;
+    public Set(){
+        Set<E> s = new Set<E>();
     }
 
     public void initSet() {
 
     }
 
-    public void add(Identifier a) {
+    public void add(E l) {
 
-    }
-
-    public int size(){
-
-    }
-
-    public boolean isEmpty(){
-        return false;
     }
 
     public boolean remove(int i){
         return false;
     }
 
-//    public E get() {
+    public boolean isEmpty(){
+        return false;
+    }
 
-  //  }
+    public int size(){
 
+    }
 
-    public void printSet(){
+    public boolean contains(E l) {
 
+        return false;
     }
 
     public Set difference(Set set2){
@@ -84,6 +68,7 @@ public class Set<E extends Comparable> implements SetInterface {
     }
 
     public Set intersection(Set set2){
+
         Set intersectionSet = new Set();
         for(int i = 0; i<this.size;i++){
             for(int j = 0; j<set2.size();j++){
@@ -150,4 +135,6 @@ public class Set<E extends Comparable> implements SetInterface {
         }
         return symdifSet;
     }
+
+    public Set<E> copySet(){}
 }*/

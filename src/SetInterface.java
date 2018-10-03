@@ -2,7 +2,7 @@ package src;
 /*
  * elements: objects of type E
  * structure: linear
- * domain: All rows of elements of type E.
+ * domain: All valid rows of elements of type E.
  *
  * constructor:
  * Set();
@@ -11,7 +11,7 @@ package src;
  */
 
 public interface SetInterface<E extends Comparable> {
-    Set<E> initSet();
+    void initSet();
     /*
      * @precondition -
      * @postcondition - The set has been emptied
@@ -22,19 +22,6 @@ public interface SetInterface<E extends Comparable> {
      * @precondition -
      * @postcondition - TRUE: Element l has been added to the set
      *                  FALSE: Element l has not been added to the set
-     */
-
-    void printSet();
-    /*
-     * @precondition -
-     * @postcondition - The set has been printed out
-     *
-     */
-
-    int size();
-    /*
-     * @precondition -
-     * @postcondition - The size of the set has been returned
      */
 
     boolean remove(int i);
@@ -51,10 +38,17 @@ public interface SetInterface<E extends Comparable> {
      *                  FALSE: The set is not empty
      */
 
-    String get(int i);
+    int size();
     /*
      * @precondition -
-     * @postcondition - Returns element i of the set in the form of a String
+     * @postcondition - The size of the set has been returned
+     */
+
+    boolean contains(E l);
+    /*
+     * @precondition -
+     * @postcondition - TRUE: The set contains the Element l
+     *                - FALSE: The set does not contain the Element l
      */
 
     Set<E> difference(Set set2);
@@ -81,10 +75,12 @@ public interface SetInterface<E extends Comparable> {
      * @postcondition - The symmetric difference between Set 1 and Set 2 has been calculated and returned
      */
 
-    boolean contains(E l);
+
+
+    Set<E> copySet();
     /*
      * @precondition -
-     * @postcondition - TRUE: The set contains the Element l
-     *                - FALSE: The set does not contain the Element l
+     * @postcondition - A deep copy of the set has been returned
      */
+
 }

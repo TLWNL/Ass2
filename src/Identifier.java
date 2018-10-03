@@ -3,7 +3,7 @@ package src;
 public class Identifier implements IdentInterface {
     private StringBuffer sb = new StringBuffer();
     public Identifier(){
-        StringBuffer ident = new StringBuffer("A");
+        this.sb = new StringBuffer("A");
     }
 
     public Identifier(Identifier src){

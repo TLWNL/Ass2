@@ -27,7 +27,6 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
 
     public List () {
         List<E> newList = new List<E>();
-        // Do I call the init here too?!
     }
 
 
