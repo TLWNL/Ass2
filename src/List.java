@@ -29,12 +29,6 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
         List<E> newList = new List<E>();
     }
 
-
-    public boolean isEmpty () {
-        return head == null;
-    }
-
-
     public List<E> init () {
         this.head = null;
         this.tail = null;
@@ -42,6 +36,9 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
         return this;
     }
 
+    public boolean isEmpty () {
+        return head == null;
+    }
 
     public List<E> copy () {
         Node tmp = head.next;

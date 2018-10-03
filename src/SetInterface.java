@@ -2,7 +2,7 @@ package src;
 /*
  * elements: objects of type E
  * structure: linear
- * domain: All valid rows of elements of type E.
+ * domain: A row of elements of type E.
  *
  * constructor:
  * Set();
@@ -24,7 +24,7 @@ public interface SetInterface<E extends Comparable> {
      *                  FALSE: Element l has not been added to the set
      */
 
-    boolean remove(int i);
+    boolean remove(;
     /*
      * @precondition -
      * @postcondition - TRUE: The element at index i of the set has been removed

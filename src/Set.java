@@ -8,33 +8,51 @@ public class Set<E extends Comparable> implements SetInterface<E> {
         Set<E> s = new Set<E>();
     }
 
-    public void initSet() {
+    public void initSet() {             // Should I reset the Set to a completely new Set?
+        this.set = null;
+        size = 0;
+    }
+
+    public boolean add(E l) {
+        if(isEmpty()) {
+            this.set = l;
+            size++;
+            return true;
+        }
+        else
+            return false;
 
     }
 
-    public void add(E l) {
-
-    }
-
-    public boolean remove(int i){
-        return false;
+    public boolean remove(){
+        if(isEmpty())
+            return false;
+        else
+            this.set = null;
+        return true;
     }
 
     public boolean isEmpty(){
-        return false;
+        if(size == 0)
+            return true;
+        else
+            return false;
     }
 
+    // Is size still needed, as there is a single row of elements in the Set?
     public int size(){
-
+        return size;
     }
 
     public boolean contains(E l) {
-
-        return false;
+        if(l == this.set)
+            return true;
+        else
+            return false;
     }
 
     public Set difference(Set set2){
-
+        E difSetData;
         Set differenceSet = new Set();
         /*
         boolean intersectFound;
