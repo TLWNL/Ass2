@@ -17,14 +17,14 @@ public interface SetInterface<E extends Comparable> {
      * @postcondition - The set has been emptied
      */
 
-    boolean add(E l);
+    boolean add(Set<E> s);
     /*
      * @precondition -
      * @postcondition - TRUE: Element l has been added to the set
      *                  FALSE: Element l has not been added to the set
      */
 
-    boolean remove(;
+    boolean remove();
     /*
      * @precondition -
      * @postcondition - TRUE: The element at index i of the set has been removed
@@ -51,25 +51,25 @@ public interface SetInterface<E extends Comparable> {
      *                - FALSE: The set does not contain the Element l
      */
 
-    Set<E> difference(Set set2);
+    Set<E> difference(Set<E> set2);
     /*
      * @precondition -
      * @postcondition - The difference between Set 1 and Set 2 has been calculated and returned
      */
 
-    Set<E> intersection(Set set2);
+    Set<E> intersection(Set<E> set2);
     /*
      * @precondition -
      * @postcondition - The intersection between Set 1 and Set 2 has been calculated and returned
      */
 
-    Set<E> union(Set set);
+    Set<E> union(Set<E> set);
     /*
      * @precondition -
      * @postcondition - The union between Set 1 and Set 2 has been calculated and returned
      */
 
-    Set<E> symmetricDifference(Set set2);
+    Set<E> symmetricDifference(Set<E> set2);
     /*
      * @precondition -
      * @postcondition - The symmetric difference between Set 1 and Set 2 has been calculated and returned

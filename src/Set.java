@@ -1,8 +1,11 @@
 package src;
 
+import java.lang.reflect.Array;
+import java.util.List;
+
 public class Set<E extends Comparable> implements SetInterface<E> {
     private int size;
-    private E set;
+    private E[] set;
 
     public Set(){
         Set<E> s = new Set<E>();
@@ -13,15 +16,10 @@ public class Set<E extends Comparable> implements SetInterface<E> {
         size = 0;
     }
 
-    public boolean add(E l) {
-        if(isEmpty()) {
-            this.set = l;
-            size++;
-            return true;
-        }
-        else
-            return false;
+    public boolean add(Set<E> s) {
+        set = (E[])Array.newInstance(s, 1);
 
+        return false;
     }
 
     public boolean remove(){
@@ -52,12 +50,11 @@ public class Set<E extends Comparable> implements SetInterface<E> {
     }
 
     public Set difference(Set set2){
-        E difSetData;
         Set differenceSet = new Set();
-        /*
+
         boolean intersectFound;
 
-        for(int i = 0; i<this.size;i++){
+        for(int i = 0; i<this.set.;i++){
             intersectFound = false;
             for(int j = 0 ; j<set2.size(); j++){
                 if((this.getIndentValue(i).toString()).equals((set2.getIndentValue(j).toString()))){

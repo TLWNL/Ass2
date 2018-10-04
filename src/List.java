@@ -130,5 +130,7 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
             current = current.prior;
         return true;
     }
+
+
 }
 
