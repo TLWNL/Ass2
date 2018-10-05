@@ -56,11 +56,15 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
 
     public List<E> insert (E d) {
         Node toAdd = new Node(d, null, tail);
-        if(head.next == null) {
+        if(head.next == null) {             //Node is first element
             head.next = toAdd;
             tail.prior = toAdd;
         }
         else {
+            while(toAdd.data.compareTo(toAdd.prior.data) != 0 &&
+                    toAdd.prior.data.compareTo(toAdd.prior.prior.data) != 1){
+                toAdd = toAdd.prior;
+            }
             (tail.prior).next = toAdd;
             tail.prior = toAdd;
         }
