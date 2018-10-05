@@ -4,10 +4,8 @@ package src;
  * structure: linear
  * domain: A row of elements of type E.
  *
- * constructor:
- * Set();
- * @precondition -
- * @postcondition - The new Set-object is empty
+ * There is a default constructor that creates an empty object.
+ *
  */
 
 public interface SetInterface<E extends Comparable> {
@@ -17,14 +15,14 @@ public interface SetInterface<E extends Comparable> {
      * @postcondition - The set has been emptied
      */
 
-    boolean add(Set<E> s);
+    boolean add(SetInterface<E> s);
     /*
      * @precondition -
-     * @postcondition - TRUE: Element l has been added to the set
-     *                  FALSE: Element l has not been added to the set
+     * @postcondition - TRUE: Element s has been added to the set
+     *                  FALSE: Element s has not been added to the set
      */
 
-    boolean remove();
+    boolean remove(int i);
     /*
      * @precondition -
      * @postcondition - TRUE: The element at index i of the set has been removed
@@ -44,43 +42,54 @@ public interface SetInterface<E extends Comparable> {
      * @postcondition - The size of the set has been returned
      */
 
-    boolean contains(E l);
+    boolean contains(SetInterface<E> s);
     /*
      * @precondition -
      * @postcondition - TRUE: The set contains the Element l
      *                - FALSE: The set does not contain the Element l
      */
 
-    Set<E> difference(Set<E> set2);
+    List<E> getWL();
+    /*
+     * @precondition -
+     * @postconditon - The set has been returned. In case of an empty set, null is returned.
+     */
+
+    void printSet();
+    /*
+     * @precondition -
+     * @postcondition - The set has been printed as a string.
+     *
+     */
+
+    SetInterface<E> difference(SetInterface<E> set2);
     /*
      * @precondition -
      * @postcondition - The difference between Set 1 and Set 2 has been calculated and returned
      */
 
-    Set<E> intersection(Set<E> set2);
+    SetInterface<E> intersection(SetInterface<E> set2);
     /*
      * @precondition -
      * @postcondition - The intersection between Set 1 and Set 2 has been calculated and returned
      */
 
-    Set<E> union(Set<E> set);
+    SetInterface<E> union(SetInterface<E> set);
     /*
      * @precondition -
      * @postcondition - The union between Set 1 and Set 2 has been calculated and returned
      */
 
-    Set<E> symmetricDifference(Set<E> set2);
+    SetInterface<E> symmetricDifference(SetInterface<E> set2);
     /*
      * @precondition -
      * @postcondition - The symmetric difference between Set 1 and Set 2 has been calculated and returned
      */
 
 
-
-    Set<E> copySet();
+    SetInterface<E> copySet();
     /*
      * @precondition -
      * @postcondition - A deep copy of the set has been returned
      */
-
 }

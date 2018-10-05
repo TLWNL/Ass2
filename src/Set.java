@@ -5,28 +5,34 @@ import java.util.List;
 
 public class Set<E extends Comparable> implements SetInterface<E> {
     private int size;
-    private E[] set;
+    private int listIndex;
+    private List<E> wrapperList;
 
     public Set(){
         Set<E> s = new Set<E>();
     }
 
-    public void initSet() {             // Should I reset the Set to a completely new Set?
-        this.set = null;
+    public void initSet() {
+        this.wrapperList = new List;
+        listIndex = 0;
         size = 0;
     }
 
-    public boolean add(Set<E> s) {
-        set = (E[])Array.newInstance(s, 1);
-
+    public boolean add(SetInterface<E> s) {
+        wrapperList.add(s.getWL().retrieve());
         return false;
     }
 
-    public boolean remove(){
+    public boolean remove(int i){
         if(isEmpty())
             return false;
         else
-            this.set = null;
+            do {
+                if (listIndex < i)
+
+            }(while(listIndex != i))
+
+            wrapperList.remove()
         return true;
     }
 
@@ -37,19 +43,26 @@ public class Set<E extends Comparable> implements SetInterface<E> {
             return false;
     }
 
-    // Is size still needed, as there is a single row of elements in the Set?
     public int size(){
         return size;
     }
 
-    public boolean contains(E l) {
+    public void printSet(){
+
+    }
+
+    public boolean contains(SetInterface<E> s) {
         if(l == this.set)
             return true;
         else
             return false;
     }
 
-    public Set difference(Set set2){
+    public List<E> getWL(){
+        return this.wrapperList;
+    }
+
+    public SetInterface<E> difference(SetInterface<E> set2){
         Set differenceSet = new Set();
 
         boolean intersectFound;
@@ -82,7 +95,7 @@ public class Set<E extends Comparable> implements SetInterface<E> {
         return differenceSet;
     }
 
-    public Set intersection(Set set2){
+    public SetInterface<E> intersection(SetInterface<E> set2){
 
         Set intersectionSet = new Set();
         for(int i = 0; i<this.size;i++){
@@ -96,7 +109,7 @@ public class Set<E extends Comparable> implements SetInterface<E> {
         return intersectionSet;
     }
 
-    public Set union(Set set2){
+    public SetInterface<E> union(SetInterface<E> set2){
         Set unionSet = new Set();
         boolean intersectFound;
         for(int i = 0; i<this.size;i++){
@@ -119,7 +132,7 @@ public class Set<E extends Comparable> implements SetInterface<E> {
         return unionSet;
     }
 
-    public Set symmetricDifference(Set set2){
+    public SetInterface<E> symmetricDifference(SetInterface<E> set2){
         Set intersectSet = this.intersection(set2);
         Set symdifSet = new Set();
 
@@ -151,5 +164,8 @@ public class Set<E extends Comparable> implements SetInterface<E> {
         return symdifSet;
     }
 
-    public Set<E> copySet(){}
+    public SetInterface<E> copySet(){
+        Set<E> copySet = new Set<E>();
+        return copySet;
+    }
 }*/
