@@ -15,7 +15,7 @@ public interface SetInterface<E extends Comparable> {
      * @postcondition - The set has been emptied
      */
 
-    boolean add(SetInterface<E> s);
+    boolean add(E s);
     /*
      * @precondition -
      * @postcondition - TRUE: Element s has been added to the set
@@ -42,18 +42,14 @@ public interface SetInterface<E extends Comparable> {
      * @postcondition - The size of the set has been returned
      */
 
-    boolean contains(SetInterface<E> s);
+    boolean find(E l);
     /*
      * @precondition -
      * @postcondition - TRUE: The set contains the Element l
      *                - FALSE: The set does not contain the Element l
      */
 
-    List<E> getWL();
-    /*
-     * @precondition -
-     * @postconditon - The set has been returned. In case of an empty set, null is returned.
-     */
+
 
     void printSet();
     /*
