@@ -49,6 +49,8 @@ public interface SetInterface<E extends Comparable> {
      *                - FALSE: The set does not contain the Element l
      */
 
+    List getList();
+
 
 
     void printSet();

@@ -26,7 +26,8 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
 
 
     public List () {
-        List<E> newList = new List<E>();
+        List<E> newList = new List<>();
+        newList.init();
     }
 
     public List<E> init () {

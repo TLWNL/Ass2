@@ -49,6 +49,17 @@ public class Set<E extends Comparable> implements SetInterface<E> {
     }
 
     public void printSet(){
+        StringBuffer toPrint = new StringBuffer();
+        wrapperList.goToFirst();
+        while(wrapperList.goToNext()){
+            toPrint.append(wrapperList.retrieve().toString());
+        }
+        System.out.printf("{%s}\n", toPrint);
+
+    }
+
+    public List getList(){
+        return this.wrapperList;
     }
 
     public boolean find(E l) {
@@ -56,58 +67,67 @@ public class Set<E extends Comparable> implements SetInterface<E> {
     }
 
     public SetInterface<E> difference(SetInterface<E> set2){
-        Set differenceSet = new Set();
+        Set<E> differenceSet = new Set<>();
+        Set<E> copiedSet = new Set<>();
+        while(this.wrapperList.goToNext()){
+            if(!copiedSet.find((E) this.wrapperList.retrieve()))
+                differenceSet.add((E) this.wrapperList.retrieve());
+            this.wrapperList.goToNext();
+        }
 
         return differenceSet;
     }
 
     public SetInterface<E> intersection(SetInterface<E> set2){
 
-        Set intersectionSet = new Set();
+        Set intersectionSet = new Set<>();
+        Set<E> copiedSet = (Set<E>) set2.copySet();
+        this.wrapperList.goToFirst();
+        while(this.wrapperList.goToNext()){
+            if(copiedSet.find((E) this.wrapperList.retrieve()))
+                intersectionSet.add(this.wrapperList.retrieve());
+            this.wrapperList.goToNext();
+        }
 
         return intersectionSet;
     }
 
     public SetInterface<E> union(SetInterface<E> set2){
-        Set unionSet = new Set();
-
+        Set<E> unionSet = new Set<>();
+        Set<E> copiedSet = (Set<E>) set2.copySet();
+        //copiedSet.wrapperList = set2.copySet().getList();       // This might be redundant
+        this.wrapperList.goToFirst();
+        while(this.wrapperList.goToNext()){                     // Adds the entire first set
+            unionSet.add((E)this.wrapperList.retrieve());
+            this.wrapperList.goToNext();
+        }
+        copiedSet.wrapperList.goToFirst();
+        while(copiedSet.wrapperList.goToNext()){
+            if(this.wrapperList.find(copiedSet.wrapperList.retrieve()))
+            {
+                copiedSet.wrapperList.goToNext();
+            }
+            else{
+                unionSet.add((E) copiedSet.wrapperList.retrieve());
+                copiedSet.wrapperList.goToNext();
+            }
+        }
         return unionSet;
     }
 
     public SetInterface<E> symmetricDifference(SetInterface<E> set2){
-        Set intersectSet = this.intersection(set2);
-        Set symdifSet = new Set();
+        Set<E> symdifSet = new Set<>();
 
-        for(int j = 0; j<this.size;j++){
-            boolean intersectFound = false;
-            for(int k = 0; k<intersectSet.size;k++){
-                if(this.getIndentValue(j).toString().equals(intersectSet.getIndentValue(k).toString())){
-                    intersectFound = true;
-                }
-            }
-            if(!intersectFound){
-                Identifier foundIdent = new Identifier(this.getIndentValue(j));
-                symdifSet.add(foundIdent);
-            }
-        }
-
-        for(int l = 0; l<set2.size();l++){
-            boolean intersectFound = false;
-            for(int m = 0; m<intersectSet.size;m++){
-                if(set2.getIndentValue(l).toString().equals(intersectSet.getIndentValue(m).toString())){
-                    intersectFound = true;
-                }
-            }
-            if(!intersectFound){
-                Identifier foundIdent2 = new Identifier(set2.getIndentValue(l));
-                symdifSet.add(foundIdent2);
-            }
-        }
         return symdifSet;
     }
 
     public SetInterface<E> copySet(){
         Set<E> copySet = new Set<E>();
+        this.wrapperList.goToFirst();
+        while(this.wrapperList.goToNext()){
+            copySet.add((E) this.wrapperList.retrieve());
+            this.wrapperList.goToNext();
+        }
         return copySet;
     }
 }
