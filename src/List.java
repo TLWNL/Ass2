@@ -1,4 +1,4 @@
-//package src;
+package src;
 
 public class List<E extends Comparable<E>> implements ListInterface<E>{
     private Node sentinel;
@@ -36,6 +36,7 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
         sentinel.next = sentinel;
         sentinel.prior = sentinel;
         current = sentinel;
+        size = 0;
         return this;
     }
 
@@ -69,61 +70,81 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
         }
         else {
             this.goToFirst();           // Current is at List index 0
-            for (int i = 0; i < this.size(); i++) {
+            for (int i = 0; i < this.size; i++) {
 
-                // ToAdd is smaller than the first (and only) element, so add to front
-                if (current.prior == sentinel && current.next == sentinel &&
-                        toAdd.data.compareTo(this.retrieve()) == -1) {
-                    sentinel.next = toAdd;
-                    toAdd.prior = sentinel;
-                    toAdd.next = sentinel.prior;
-                    current.prior = toAdd;
-                    current = toAdd;
-                    size++;
+                if(size == 1){
+                    // ToAdd is larger than the first (and only) element, so add to back of Element 1
+                    if(toAdd.data.compareTo(this.retrieve()) > -1){
+                        current.next = toAdd;
+                        toAdd.prior = current;
+                        toAdd.next = sentinel;
+                        sentinel.prior = toAdd;
+                        current = toAdd;
+                        size++;
+                    }
+                    // ToAdd is smaller than the first element, so add to front
+                    else{
+                        sentinel.next = toAdd;
+                        toAdd.prior = sentinel;
+                        toAdd.next = sentinel.prior;
+                        current.prior = toAdd;
+                        current = toAdd;
+                        size++;
+                    }
+                    break;
                 }
-                // ToAdd is larger than the first (and only) element, so add to back
-                else if (current.prior == sentinel && current.next == sentinel &&
-                        toAdd.data.compareTo(this.retrieve()) != -1) {
-                    current.next = toAdd;
-                    toAdd.prior = current;
-                    toAdd.next = sentinel;
-                    sentinel.prior = toAdd;
-                    size++;
+                else {
+                    // ToAdd is smaller than the first element, so add to front
+                    if(current.prior == sentinel && toAdd.data.compareTo(this.retrieve()) < 0){
+                        sentinel.next = toAdd;
+                        toAdd.prior = sentinel;
+                        toAdd.next = current;
+                        current.prior = toAdd;
+                        current = toAdd;
+                        size++;
+                        break;
+                    }
 
+                    // ToAdd is smaller than the last element
+                    if (current.next == sentinel && toAdd.data.compareTo(this.retrieve()) < 0) {
+                        toAdd.prior = current.prior;
+                        current.prior.next = toAdd;
+                        toAdd.next = current;
+                        current.prior = toAdd;
+                        current = toAdd;
+                        size++;
+                        break;
+                    }
+
+                    // ToAdd is larger than the last element
+                    else if (current.next == sentinel && toAdd.data.compareTo(this.retrieve()) > -1) {
+                        current.next = toAdd;
+                        toAdd.prior = current;
+                        toAdd.next = sentinel;
+                        sentinel.prior = toAdd;
+                        current = toAdd;
+                        size++;
+                        break;
+                    }
+
+                    // Not the first nor the last element, ToAdd is smaller than the element at index i
+                    if (current.prior != sentinel && current.next != sentinel &&
+                            toAdd.data.compareTo(this.retrieve()) < 0) {
+                        current.prior.next = toAdd;
+                        toAdd.next = current;
+                        toAdd.prior = current.prior;
+                        current.prior = toAdd;
+                        current = toAdd;
+                        size++;
+                        break;
+                    }
+                }
+                if(current.next != null){
+                    current = current.next;
                 }
 
-                // ToAdd is smaller than the last element
-                if (current.next == sentinel && toAdd.data.compareTo(this.retrieve()) == -1) {
-                    toAdd.prior = current.prior;
-                    toAdd.prior.next = toAdd;
-                    toAdd.next = current;
-                    current.prior = toAdd;
-                    current = toAdd;
-                    size++;
-                }
-
-                // ToAdd is larger than the last element
-                else if (current.next == sentinel && toAdd.data.compareTo(this.retrieve()) != -1) {
-                    current.next = toAdd;
-                    toAdd.prior = current;
-                    toAdd.next = sentinel;
-                    sentinel.prior = toAdd;
-                    current = toAdd;
-                    size++;
-                }
-
-                // Not the first nor the last element, so add in between two elements
-                if (current.prior != sentinel && current.next != sentinel &&
-                        toAdd.data.compareTo(this.retrieve()) == -1) {
-                    toAdd.prior = current.prior;
-                    toAdd.prior.next = toAdd;
-                    toAdd.next = current;
-                    current.prior = toAdd;
-                    current = toAdd;
-                    size++;
-                }
-                current = current.next;
             }
+
         }
 
         return this;
@@ -136,9 +157,28 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
 
 
     public ListInterface<E> remove () {
-        current.prior.next = current.next;
-        current.next.prior = current.prior;
-        current = current.next;
+        // Removal of the first element
+        if(sentinel.next == current){
+            sentinel.next = current.next;
+            current.next.prior = sentinel;
+            current.prior = null;           // Removes the pointer to the sentinel
+            current = current.next;
+            size--;
+        }
+        // Removal of the last element
+        else if(sentinel.prior == current){
+            sentinel.prior = current.prior;
+            current.prior.next = sentinel;
+            current.next = null;
+            current = sentinel.prior;
+            size--;
+        }
+        else {
+            current.prior.next = current.next;
+            current.next.prior = current.prior;
+            current = current.next;
+            size--;
+        }
         return this;
     }
 
