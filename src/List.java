@@ -1,8 +1,7 @@
 package src;
 
 public class List<E extends Comparable<E>> implements ListInterface<E>{
-    private Node head;
-    private Node tail;
+    private Node sentinel;
     private Node current;
     private int size;
 
@@ -25,25 +24,28 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
     }
 
 
-    public List () {
-        List<E> newList = new List<>();
-        newList.init();
+    public List() {
+        sentinel = new Node(null);
+        sentinel.next = sentinel;
+        sentinel.prior = sentinel;
+        current = sentinel;
+        this.size = 0;
     }
 
-    public List<E> init () {
-        this.head = null;
-        this.tail = null;
-        this.size = 0;
+    public ListInterface<E> init () {
+        sentinel.next = sentinel;
+        sentinel.prior = sentinel;
+        current = sentinel;
         return this;
     }
 
     public boolean isEmpty () {
-        return head == null;
+        return sentinel.next == sentinel;
     }
 
-    public List<E> copy () {
-        Node tmp = head.next;
-        List copiedList = new List();
+    public ListInterface<E> copy () {
+        Node tmp = sentinel.next;
+        List<E> copiedList = new List<>();
         while(tmp.next != null)
             copiedList.insert(tmp.data);
         return copiedList;
@@ -55,22 +57,75 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
     }
 
 
-    public List<E> insert (E d) {
-        Node toAdd = new Node(d, null, tail);
-        if(head.next == null) {             //Node is first element
-            head.next = toAdd;
-            tail.prior = toAdd;
+    public ListInterface<E> insert (E d) {
+        Node toAdd = new Node(d, null, null);
+        if (isEmpty()) {                   // The list is empty
+            sentinel.next = toAdd;
+            sentinel.prior = toAdd;
+            toAdd.next = sentinel;
+            toAdd.prior = sentinel;
+            current = toAdd;
+            size++;
         }
         else {
-            while(toAdd.data.compareTo(toAdd.prior.data) != 0 &&
-                    toAdd.prior.data.compareTo(toAdd.prior.prior.data) != 1){
-                toAdd = toAdd.prior;
+            this.goToFirst();           // Current is at List index 0
+            for (int i = 0; i < this.size(); i++) {
+
+                // ToAdd is smaller than the first (and only) element, so add to front
+                if (current.prior == sentinel && current.next == sentinel &&
+                        toAdd.data.compareTo(this.retrieve()) == -1) {
+                    sentinel.next = toAdd;
+                    toAdd.prior = sentinel;
+                    toAdd.next = sentinel.prior;
+                    current.prior = toAdd;
+                    current = toAdd;
+                    size++;
+                }
+                // ToAdd is larger than the first (and only) element, so add to back
+                else if (current.prior == sentinel && current.next == sentinel &&
+                        toAdd.data.compareTo(this.retrieve()) != -1) {
+                    current.next = toAdd;
+                    toAdd.prior = current;
+                    toAdd.next = sentinel;
+                    sentinel.prior = toAdd;
+                    size++;
+
+                }
+
+                // ToAdd is smaller than the last element
+                if (current.next == sentinel && toAdd.data.compareTo(this.retrieve()) == -1) {
+                    toAdd.prior = current.prior;
+                    toAdd.prior.next = toAdd;
+                    toAdd.next = current;
+                    current.prior = toAdd;
+                    current = toAdd;
+                    size++;
+                }
+
+                // ToAdd is larger than the last element
+                else if (current.next == sentinel && toAdd.data.compareTo(this.retrieve()) != -1) {
+                    current.next = toAdd;
+                    toAdd.prior = current;
+                    toAdd.next = sentinel;
+                    sentinel.prior = toAdd;
+                    current = toAdd;
+                    size++;
+                }
+
+                // Not the first nor the last element, so add in between two elements
+                if (current.prior != sentinel && current.next != sentinel &&
+                        toAdd.data.compareTo(this.retrieve()) == -1) {
+                    toAdd.prior = current.prior;
+                    toAdd.prior.next = toAdd;
+                    toAdd.next = current;
+                    current.prior = toAdd;
+                    current = toAdd;
+                    size++;
+                }
+                current = current.next;
             }
-            (tail.prior).next = toAdd;
-            tail.prior = toAdd;
         }
-        current = toAdd;
-        size++;
+
         return this;
     }
 
@@ -80,7 +135,7 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
     }
 
 
-    public List<E> remove () {
+    public ListInterface<E> remove () {
         current.prior.next = current.next;
         current.next.prior = current.prior;
         current = current.next;
@@ -90,37 +145,37 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
 
     public boolean find (E d) {
         do {
-            current = head.next;
+            goToFirst();
             if (current.data == d)
                 return true;
             else
                 current = current.next;
-        }while(current.next != null);
+        }while(current.next != sentinel);
 
         return false;
     }
 
 
     public boolean goToFirst () {
-        if(head.next == null)
+        if(sentinel.next == sentinel)
             return false;
         else
-            current = head.next;
+            current = sentinel.next;
         return true;
     }
 
 
     public boolean goToLast () {
-        if(tail.prior == null)
+        if(sentinel.prior == sentinel)
             return false;
         else
-            current = tail.prior;
+            current = sentinel.prior;
         return true;
     }
 
 
     public boolean goToNext () {
-        if(current.next == null)
+        if(current.next == sentinel)
             return false;
         else
             current = current.next;
@@ -129,7 +184,7 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
 
 
     public boolean goToPrevious () {
-        if(current.prior == null)
+        if(current.prior == sentinel)
             return false;
         else
             current = current.prior;
@@ -138,4 +193,3 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
 
 
 }
-
