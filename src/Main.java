@@ -1,4 +1,4 @@
-//package src;
+package src;
 
 import java.io.PrintStream;
 import java.math.BigInteger;
@@ -90,7 +90,7 @@ public class Main  {
         			exitCondition = false;
         		}
         		else {
-        			System.out.println("Invalid input, bad name formating");
+        			System.out.println("Invalid input, bad name formatting");
         			return false;
         		}
         		
@@ -163,7 +163,7 @@ public class Main  {
         			exitCondition = false;
         		}
         		else {
-        			System.out.println("Invalid input, bad name formating");
+        			System.out.println("Invalid input, bad name formatting");
         			return false;
         		}
         		
