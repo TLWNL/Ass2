@@ -93,16 +93,17 @@ public class Main  {
         		}
         		
     		}while(exitCondition);
-    		checker = 0;
+    		Set set1 = null;
         	for (Object name: hashTable.keySet()){
         		if (hashCodeOfSet.equals(name)) {
         			System.out.println("Found a key");
-        			checker = 1;
+        			set1 = (Set) hashTable.get(hashCodeOfSet);
         		}
         	}
-        	if (checker==0) {
+        	if (set1==null) {
         		System.out.println("No key");
-        		Set set1 = new Set();
+        		set1 = new Set();
+        		set1.isEmpty();
         		hashTable.put(hashCodeOfSet, set1);
         	}
     		
