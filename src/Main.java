@@ -1,4 +1,4 @@
-package src;
+//package src;
 
 import java.io.PrintStream;
 import java.math.BigInteger;
@@ -14,14 +14,14 @@ public class Main  {
         // While there is input, read line and parse it.
     	
     	//the "Set" is a placeholder, this is the type our hasmap will hold im fairly sure it should be the sets though
-    	//HashMap<BigInteger, Set> hashTable = new HashMap<BigInteger, Set>();
+    	HashMap<BigInteger, Set> hashTable = new HashMap<BigInteger, Set>();
     	
-    	//Scanner in = new Scanner(System.in);
-        //in.useDelimiter("");
-        //while(parserChecker(in, hashTable)) {
-    	//   System.out.println("Parsed a line");
+    	Scanner in = new Scanner(System.in);
+        in.useDelimiter("");
+        while(parserChecker(in, hashTable)) {
+    	   System.out.println("Parsed a line");
 
-       //}
+       }
         
         
     }
@@ -70,8 +70,9 @@ public class Main  {
     	case 1:
     		return false;
     	case 2:
+    		Identifier ident = new Identifier();
     		do {
-    			Identifier ident = new Identifier();
+    			
         		if(nextCharIsLetter(in)) {
         			ident.add(nextChar(in));
         			checker = 1;
@@ -81,6 +82,8 @@ public class Main  {
         		}
         		else if (nextCharIs(in, '=')) {
         			nextChar(in);
+        			ident.getIdent();
+        			ident.getIdent().hashCode();
         			hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
         			exitCondition = false;
         		}
@@ -90,18 +93,18 @@ public class Main  {
         		}
         		
     		}while(exitCondition);
-    		
+    		checker = 0;
         	for (Object name: hashTable.keySet()){
-        		System.out.println("mehere");
-        		if (hashCodeOfSet == name) {
+        		if (hashCodeOfSet.equals(name)) {
         			System.out.println("Found a key");
-        			checker = 4;
+        			checker = 1;
         		}
-        		
-        		if (checker != 4) {
-        			System.out.println("No key");
-        		}
-        	} 
+        	}
+        	if (checker==0) {
+        		System.out.println("No key");
+        		Set set1 = new Set();
+        		hashTable.put(hashCodeOfSet, set1);
+        	}
     		
         	in.nextLine();
     		return true;

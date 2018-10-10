@@ -1,4 +1,5 @@
-package src;/*
+//package src;
+/*
  * elements: objects of type E
  * structure: linear
  * domain: A row of elements of type E.

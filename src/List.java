@@ -1,4 +1,4 @@
-package src;
+//package src;
 
 public class List<E extends Comparable<E>> implements ListInterface<E>{
     private Node sentinel;

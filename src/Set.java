@@ -1,4 +1,4 @@
-package src;
+//package src;
 
 public class Set<E extends Comparable<E>> implements SetInterface<E> {
     private int size;
