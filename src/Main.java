@@ -5,7 +5,8 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Pattern;
-public class Main {
+
+public class Main  {
 	PrintStream out;
 
     private void start() {
@@ -13,13 +14,14 @@ public class Main {
         // While there is input, read line and parse it.
     	
     	//the "Set" is a placeholder, this is the type our hasmap will hold im fairly sure it should be the sets though
-    	HashMap<BigInteger, Set> hashTable = new HashMap<BigInteger, Set>();
+    	//HashMap<BigInteger, Set> hashTable = new HashMap<BigInteger, Set>();
     	
-    	Scanner in = new Scanner(System.in);
-        in.useDelimiter("");
-       while(parserChecker(in, hashTable)) {
-    	   System.out.println("Parsed a line");
-       }
+    	//Scanner in = new Scanner(System.in);
+        //in.useDelimiter("");
+        //while(parserChecker(in, hashTable)) {
+    	//   System.out.println("Parsed a line");
+
+       //}
         
         
     }
@@ -31,7 +33,6 @@ public class Main {
     public char nextChar(Scanner in){
         return in.next().charAt(0);
     }
-
 
     public boolean nextCharIs(Scanner in, char c){
         return in.hasNext(Pattern.quote(c+""));

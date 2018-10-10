@@ -127,7 +127,7 @@ public class List<E extends Comparable<E>> implements ListInterface<E>{
                         break;
                     }
 
-                    // Not the first nor the last element, ToAdd is smaller than the element at index i
+                    // ToAdd is smaller than the element at index i
                     if (current.prior != sentinel && current.next != sentinel &&
                             toAdd.data.compareTo(this.retrieve()) < 0) {
                         current.prior.next = toAdd;

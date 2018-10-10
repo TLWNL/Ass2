@@ -1,5 +1,4 @@
-package src;
-/*
+package src;/*
  * elements: objects of type E
  * structure: linear
  * domain: A row of elements of type E.
@@ -48,10 +47,6 @@ public interface SetInterface<E extends Comparable> {
      * @postcondition - TRUE: The set contains the Element l
      *                - FALSE: The set does not contain the Element l
      */
-
-    List getList();
-
-
 
     void printSet();
     /*
