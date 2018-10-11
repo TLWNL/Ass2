@@ -68,8 +68,6 @@ public class Main  {
     	}
     	
     	switch (typeOfO) {
-    	case 0:
-    		return false;
     	case 1:
     		nextChar(in);
     		ident = new Identifier();
