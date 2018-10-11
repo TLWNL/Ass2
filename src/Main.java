@@ -1,4 +1,4 @@
-package src;
+//package src;
 
 import java.io.PrintStream;
 import java.math.BigInteger;
@@ -122,6 +122,9 @@ public class Main  {
         			hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
         			exitCondition = false;
         		}
+        		else if (nextCharIs(in, ' ')) {
+        			nextChar(in);
+        		}
         		else {
         			System.out.println("Invalid input, bad name formating");
         			return false;
@@ -159,6 +162,9 @@ public class Main  {
         			ident.getIdent().hashCode();
         			hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
         			exitCondition = false;
+        		}
+        		else if (nextCharIs(in, ' ')) {
+        			nextChar(in);
         		}
         		else {
         			System.out.println("Invalid input, bad name formatting");
