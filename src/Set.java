@@ -16,7 +16,8 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
         this.size = 0;
     }
 
-    public boolean add(E l) {
+    public boolean add(E l)
+    {
         if(!this.find(l)) {
             this.wrapperList.insert(l);
             //System.out.printf("Insert complete, inserted element: %s\n", this.wrapperList.retrieve());

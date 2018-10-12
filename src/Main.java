@@ -157,8 +157,6 @@ public class Main  {
         		}
         		else if (nextCharIs(in, '=')) {
         			nextChar(in);
-        			ident.getIdent();
-        			ident.getIdent().hashCode();
         			hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
         			exitCondition = false;
         		}
@@ -178,7 +176,6 @@ public class Main  {
         	if (set1==null) {
         		System.out.println("No key");
         		set1 = new Set();
-        		set1.isEmpty();
         		hashTable.put(hashCodeOfSet, set1);
         	}
     		
