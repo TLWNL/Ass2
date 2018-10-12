@@ -68,8 +68,6 @@ public class Main  {
     	}
     	
     	switch (typeOfO) {
-    	case 0:
-    		return false;
     	case 1:
     		nextChar(in);
     		ident = new Identifier();
@@ -90,7 +88,7 @@ public class Main  {
         			exitCondition = false;
         		}
         		else {
-        			System.out.println("Invalid input, bad name formating");
+        			System.out.println("Invalid input, bad name formatting");
         			return false;
         		}
         		
@@ -123,6 +121,9 @@ public class Main  {
         			ident.getIdent().hashCode();
         			hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
         			exitCondition = false;
+        		}
+        		else if (nextCharIs(in, ' ')) {
+        			nextChar(in);
         		}
         		else {
         			System.out.println("Invalid input, bad name formating");
@@ -160,8 +161,11 @@ public class Main  {
         			hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
         			exitCondition = false;
         		}
+        		else if (nextCharIs(in, ' ')) {
+        			nextChar(in);
+        		}
         		else {
-        			System.out.println("Invalid input, bad name formating");
+        			System.out.println("Invalid input, bad name formatting");
         			return false;
         		}
         		
