@@ -40,156 +40,62 @@ public class Main  {
 
 
     public boolean nextCharIsDigit(Scanner in){
-        return in.hasNext("[0-9]");
+        return in.hasNext("[1-9]");
+    }
+    
+    public boolean nextCharIsZero(Scanner in){
+        return in.hasNext("[0]");
     }
 
     boolean nextCharIsLetter(Scanner in) {
         return in.hasNext("[a-zA-Z]");
     }
     
-    boolean parser(Scanner in, HashMap hashTable) {
-		Identifier ident = new Identifier();
-		Set set1 = new Set();
-		Set set2 = new Set();
-    	int typeOfO = 0;
-    	int checker = 0;
-    	BigInteger hashCodeOfSet = BigInteger.ZERO;
-        boolean exitCondition = true;
+    boolean statement(Scanner in, HashMap hashTable) {
     	if(nextCharIs(in, '?')) {
-    		typeOfO = 1;
+    		print_statement(in, hashTable);
     	}
     	else if(nextCharIsLetter(in)) {
-    		typeOfO = 2;
+    		assignment(in, hashTable);
     	}
     	else {
     		System.out.println("Incorrect input command");
     		in.nextLine();
     		return false;
     	}
-    	
-    	switch (typeOfO) {
-    	case 1:
-    		nextChar(in);
-    		ident = new Identifier();
-    		do {
-    			
-        		if(nextCharIsLetter(in)) {
-        			ident.add(nextChar(in));
-        			checker = 1;
-        		}
-        		else if(nextCharIsDigit(in) && checker != 0) {
-        			ident.add(nextChar(in));
-        		}
-        		else if (nextCharIs(in, '+')) {
-        			nextChar(in);
-        			ident.getIdent();
-        			ident.getIdent().hashCode();
-        			hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
-        			exitCondition = false;
-        		}
-        		else {
-        			System.out.println("Invalid input, bad name formatting");
-        			return false;
-        		}
-        		
-    		}while(exitCondition);
-    		exitCondition = true;
-    		set1 = null;
-        	for (Object name: hashTable.keySet()){
-        		if (hashCodeOfSet.equals(name)) {
-        			System.out.println("Found a key");
-        			set1 = (Set) hashTable.get(hashCodeOfSet);
-        		}
-        	}
-        	if (set1==null) {
-        		System.out.println("First set not found");
-        		return false;
-        	}
-        	ident = new Identifier();
-    		do {
-    			
-        		if(nextCharIsLetter(in)) {
-        			ident.add(nextChar(in));
-        			checker = 1;
-        		}
-        		else if(nextCharIsDigit(in) && checker != 0) {
-        			ident.add(nextChar(in));
-        		}
-        		else if (nextCharIs(in, '+')) {
-        			nextChar(in);
-        			ident.getIdent();
-        			ident.getIdent().hashCode();
-        			hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
-        			exitCondition = false;
-        		}
-        		else if (nextCharIs(in, ' ')) {
-        			nextChar(in);
-        		}
-        		else {
-        			System.out.println("Invalid input, bad name formating");
-        			return false;
-        		}
-        		
-    		}while(exitCondition);
-    		set2 = null;
-        	for (Object name: hashTable.keySet()){
-        		if (hashCodeOfSet.equals(name)) {
-        			System.out.println("Found a key");
-        			set2 = (Set) hashTable.get(hashCodeOfSet);
-        		}
-        	}
-        	if (set1==null) {
-        		System.out.println("Second set not found");
-        		return false;
-        	}
+    }
+    
+    Identifier identifierReader(Scanner in) {
+    	nextChar(in);
+		Identifier ident = new Identifier();
+		int checker = 0;
+		do {
+			
+    		if(nextCharIsLetter(in)) {
+    			ident.add(nextChar(in));
+    			checker = 1;
+    		}
+    		else if(nextCharIsDigit(in) && checker != 0) {
+    			ident.add(nextChar(in));
+    		}
+    		else if (nextCharIs(in, ' ')) {
+    			nextChar(in);
+    		}
+    		else if (nextCharIs(in, '+') | nextCharIs(in, '|') | nextCharIs(in, '-') | nextCharIs(in, '*') | nextCharIs(in, '=') ) {
+    			nextChar(in);
+    			checker =2;
+    		}
+    		else {
+    			System.out.println("Invalid input, bad name formatting");
+    		}
     		
-        	in.nextLine();
-    		return true;
-    	case 2:
-    		ident = new Identifier();
-    		do {
-    			
-        		if(nextCharIsLetter(in)) {
-        			ident.add(nextChar(in));
-        			checker = 1;
-        		}
-        		else if(nextCharIsDigit(in) && checker != 0) {
-        			ident.add(nextChar(in));
-        		}
-        		else if (nextCharIs(in, '=')) {
-        			nextChar(in);
-        			hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
-        			exitCondition = false;
-        		}
-        		else if (nextCharIs(in, ' ')) {
-        			nextChar(in);
-        		}
-        		else {
-        			System.out.println("Invalid input, bad name formatting");
-        			return false;
-        		}
-        		
-    		}while(exitCondition);
-    		set1 = null;
-        	for (Object name: hashTable.keySet()){
-        		if (hashCodeOfSet.equals(name)) {
-        			System.out.println("Found a key");
-        			set1 = (Set) hashTable.get(hashCodeOfSet);
-        		}
-        	}
-        	if (set1==null) {
-        		System.out.println("No key");
-        		set1 = new Set();
-        		hashTable.put(hashCodeOfSet, set1);
-        	}
-    		
-        	in.nextLine();
-    		return true;
-    	default:
-    		return false;
-    	}
-    	
-    	
+		}while(checker!=2);
+		return ident;
+    }
+    
+    void assignment (Scanner in, HashMap hashTable) {
+    	Identifier ident = identifier(in);
+    	BigInteger hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
     }
     
     boolean parserChecker(Scanner in, HashMap hashTable) {
@@ -198,7 +104,50 @@ public class Main  {
                 out.printf("\n"); // otherwise line with ^D will be overwritten
                 return false;
             }
-        } while (! parser(in, hashTable));
+        } while (! statement(in, hashTable));
         return true;
     }
+    
+    Set factor(Scanner in, HashMap hashTable) throws APException{
+    	if (nextCharIsLetter(in)) {
+    		Identifier ident = identifierReader(in);
+    		return setHashTableFinder(ident, hashTable);
+    		//retrieve the set that belongs with that identifier
+    	}
+    	else if(nextCharIs(in, '{')) {
+    		//read set
+    	}
+    	else if(nextCharIs(in, '(')) {
+    		//determine the set that is the result of the complex factor
+    	}
+    	else {
+    		//throw exception here
+    	}
+		return null;
+    }
+    
+    Set setHashTableFinder(Identifier ident, HashMap hashTable) {
+    	Set<BigInteger> set1 = null;
+    	BigInteger hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
+        for (Object name: hashTable.keySet()){
+            if (hashCodeOfSet.equals(name)) {
+                System.out.println("Found a key");
+                set1 = (Set) hashTable.get(hashCodeOfSet);
+            }
+        }
+        if (set1==null) {
+        	//throw error
+        }
+        return set1;
+    }
+    
+    Set setReaderMaker (HashMap hashTable, Scanner in) {
+    	Set<BigInteger> set1 = new Set<>();
+    	nextChar(in);
+    	
+    	if (nextCharIsDigit(in)) {
+    		
+    	}
+    }
+    
 }
