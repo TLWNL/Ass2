@@ -1,4 +1,4 @@
-//package src;
+package src;
 
 import java.io.PrintStream;
 import java.math.BigInteger;
@@ -12,7 +12,6 @@ public class Main  {
     private void start() {
         // Create a scanner on System.in
         // While there is input, read line and parse it.
-    	
     	//the "Set" is a placeholder, this is the type our hasmap will hold im fairly sure it should be the sets though
     	HashMap<BigInteger, Set> hashTable = new HashMap<BigInteger, Set>();
     	
@@ -29,75 +28,7 @@ public class Main  {
     public static void main(String[] argv) {
         new Main().start();
     }
-    
-    public char nextChar(Scanner in){
-        return in.next().charAt(0);
-    }
 
-    public boolean nextCharIs(Scanner in, char c){
-        return in.hasNext(Pattern.quote(c+""));
-    }
-
-
-    public boolean nextCharIsDigit(Scanner in){
-        return in.hasNext("[1-9]");
-    }
-    
-    public boolean nextCharIsZero(Scanner in){
-        return in.hasNext("[0]");
-    }
-
-    boolean nextCharIsLetter(Scanner in) {
-        return in.hasNext("[a-zA-Z]");
-    }
-    
-    boolean statement(Scanner in, HashMap hashTable) {
-    	if(nextCharIs(in, '?')) {
-    		print_statement(in, hashTable);
-    	}
-    	else if(nextCharIsLetter(in)) {
-    		assignment(in, hashTable);
-    	}
-    	else {
-    		System.out.println("Incorrect input command");
-    		in.nextLine();
-    		return false;
-    	}
-    }
-    
-    Identifier identifierReader(Scanner in) {
-    	nextChar(in);
-		Identifier ident = new Identifier();
-		int checker = 0;
-		do {
-			
-    		if(nextCharIsLetter(in)) {
-    			ident.add(nextChar(in));
-    			checker = 1;
-    		}
-    		else if(nextCharIsDigit(in) && checker != 0) {
-    			ident.add(nextChar(in));
-    		}
-    		else if (nextCharIs(in, ' ')) {
-    			nextChar(in);
-    		}
-    		else if (nextCharIs(in, '+') | nextCharIs(in, '|') | nextCharIs(in, '-') | nextCharIs(in, '*') | nextCharIs(in, '=') ) {
-    			nextChar(in);
-    			checker =2;
-    		}
-    		else {
-    			System.out.println("Invalid input, bad name formatting");
-    		}
-    		
-		}while(checker!=2);
-		return ident;
-    }
-    
-    void assignment (Scanner in, HashMap hashTable) {
-    	Identifier ident = identifier(in);
-    	BigInteger hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
-    }
-    
     boolean parserChecker(Scanner in, HashMap hashTable) {
     	do {
             if (! in.hasNextLine()) {
@@ -109,21 +40,22 @@ public class Main  {
     }
     
     Set factor(Scanner in, HashMap hashTable) throws APException{
+    	Set<BigInteger> createdSet = new Set<>();
     	if (nextCharIsLetter(in)) {
-    		Identifier ident = identifierReader(in);
+    		Identifier ident = read_identifier(in);
     		return setHashTableFinder(ident, hashTable);
     		//retrieve the set that belongs with that identifier
     	}
     	else if(nextCharIs(in, '{')) {
-    		//read set
+    		createdSet = read_set(in);
     	}
     	else if(nextCharIs(in, '(')) {
-    		//determine the set that is the result of the complex factor
+    		createdSet = read_complex_factor(in);
     	}
     	else {
     		//throw exception here
     	}
-		return null;
+		return createdSet;
     }
     
     Set setHashTableFinder(Identifier ident, HashMap hashTable) {
@@ -145,9 +77,210 @@ public class Main  {
     	Set<BigInteger> set1 = new Set<>();
     	nextChar(in);
     	
-    	if (nextCharIsDigit(in)) {
-    		
+    	if (nextCharIsPositiveNumber(in)) {
+    		System.out.printf("Test");
     	}
+    	return  set1;
     }
-    
+
+	boolean statement(Scanner in, HashMap hashTable) {
+		if(nextCharIs(in, '?')) {
+			print_statement(in, hashTable);
+		}
+		else if(nextCharIsLetter(in)) {
+			assignment(in, hashTable);
+		}
+		else {
+			System.out.println("Incorrect input command");
+			in.nextLine();
+			return false;
+		}
+		return true;
+	}
+
+	void assignment (Scanner in, HashMap hashTable) {
+		Identifier ident = Identifier(in);
+		BigInteger hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
+	}
+
+	void print_statement(Scanner in, HashMap hashTable){
+		do{
+			read_expression(in);
+		}while(read_expression(in));
+	}
+
+	void read_comment(Scanner in){}
+
+	Identifier read_identifier(Scanner in) {
+		nextChar(in);
+		Identifier ident = new Identifier();
+		int checker = 0;
+		do {
+
+			if(nextCharIsLetter(in)) {
+				ident.add(nextChar(in));
+				checker = 1;
+			}
+			else if(nextCharIsNaturalNumber(in) && checker != 0) {
+				ident.add(nextChar(in));
+			}
+			else if (nextCharIs(in, ' ')) {
+				nextChar(in);
+			}
+			else if (nextCharIs(in, '+') | nextCharIs(in, '|') | nextCharIs(in, '-') | nextCharIs(in, '*') | nextCharIs(in, '=') ) {
+				nextChar(in);
+				checker =2;
+			}
+			else {
+				System.out.println("Invalid input, bad name formatting");
+			}
+
+		}while(checker!=2);
+		return ident;
+	}
+
+	boolean read_expression(Scanner in){
+		while(read_term(in)){
+			read_term(in);
+			return true;
+		}
+		return false;
+	}
+
+	boolean read_term(Scanner in){
+		while(read_factor(in)){
+			read_factor(in);
+			return true;
+		}
+
+		return false;
+	}
+
+	boolean read_factor(Scanner in){
+		if(nextCharIs(in, '(')){
+			read_complex_factor(in);
+		}
+		else if(nextCharIs(in, '{')){
+			Set<BigInteger> createdSet = read_set(in);
+		}
+		else if(nextCharIsLetter(in)){
+			read_identifier(in);
+		}
+	}
+
+	Set read_complex_factor(Scanner in){
+    	Set<BigInteger> newSet1 = new Set<>();
+    	Set<BigInteger> newSet2 = new Set<>();
+    	Set<BigInteger> calculatedSet = new Set<>();
+
+    	while(in.hasNext()){
+    		// Reads a identifier
+    		if(nextCharIsLetter(in)){
+    			// find Identifer from hashmap
+			}
+			// Reads a set
+			else if(nextCharIs(in, '{')){
+    			if(newSet1.isEmpty())
+    				newSet1 = read_set(in);
+    			else
+					newSet2 = read_set(in);
+			}
+
+			else if(nextCharIsMultiplicativeOperator(in)){
+    			calculatedSet = (Set<BigInteger>) newSet1.intersection(newSet2);
+    			newSet1.initSet();
+    			newSet2.initSet();
+    			newSet1 = calculatedSet;
+			}
+
+			else if(nextCharIsAdditiveOperator(in)){
+    			if(nextCharIs(in, '+')){
+    				calculatedSet = (Set<BigInteger>) newSet1.union(newSet2);
+    				newSet1.initSet();
+    				newSet2.initSet();
+    				newSet1 = calculatedSet;
+				}
+				else if(nextCharIs(in, '-')){
+    				calculatedSet = (Set<BigInteger>) newSet1.difference(newSet2);
+					newSet1.initSet();
+					newSet2.initSet();
+					newSet1 = calculatedSet;
+				}
+				else if(nextCharIs(in, '|')){
+    				calculatedSet = (Set<BigInteger>) newSet1.symmetricDifference(newSet2);
+					newSet1.initSet();
+					newSet2.initSet();
+					newSet1 = calculatedSet;
+				}
+			}
+		}
+		return newSet1;
+	}
+
+	Set read_set(Scanner in){
+    	Set<BigInteger> newSet = new Set<>();
+		while(!nextCharIs(in, '}')){
+			read_row_natural_numbers(in, newSet);
+		}
+		return newSet;
+	}
+
+	void read_row_natural_numbers(Scanner in, Set newSet){
+    	StringBuffer natNumb = new StringBuffer();
+    	while(in.hasNext()) {
+			while (!nextCharIs(in, ',')) {
+				natNumb.append(in.next());
+			}
+			String toAdd = natNumb.toString();
+			natNumb.delete(0,natNumb.length());			// May have to change it to length-1
+			newSet.add(new BigInteger(toAdd));
+		}
+	}
+
+	boolean nextCharIsAdditiveOperator(Scanner in){
+    	if(nextCharIs(in, '+')){
+    		return true;
+		}
+		else if(nextCharIs(in, '|')){
+    		return true;
+		}
+		else if(nextCharIs(in, '-')){
+    		return true;
+		}
+		return false;
+	}
+
+	boolean nextCharIsMultiplicativeOperator(Scanner in){
+    	if(nextCharIs(in, '*'))
+    		return true;
+    	return false;
+	}
+
+	boolean nextCharIsNaturalNumber(Scanner in){
+    	if(nextCharIsPositiveNumber(in) || nextCharIsZero(in))
+    		return true;
+
+    	return false;
+	}
+
+	public boolean nextCharIsZero(Scanner in){
+		return in.hasNext("[0]");
+	}
+
+	public boolean nextCharIsPositiveNumber(Scanner in){
+		return in.hasNext("[1-9]");
+	}
+
+	boolean nextCharIsLetter(Scanner in) {
+		return in.hasNext("[a-zA-Z]");
+	}
+
+	public boolean nextCharIs(Scanner in, char c){
+		return in.hasNext(Pattern.quote(c+""));
+	}
+
+	public char nextChar(Scanner in){
+		return in.next().charAt(0);
+	}
+
 }
