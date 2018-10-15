@@ -103,15 +103,22 @@ public class Main  {
 	}
 
 	void assignment (Scanner in, HashMap hashTable) {
+    	Set<BigInteger> toIdent = read_expression(in);
 		Identifier ident = read_identifier(in);
 		BigInteger hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
+
+		// Hash table contains the key
+		if(hashTable.containsKey(hashCodeOfSet))
+			hashTable.replace(hashCodeOfSet, toIdent);
+		else
+			hashTable.put(hashCodeOfSet, toIdent);
 		//return the set assigned to said hash
 		//set2 created
-		{
+
 		//set3
 		//set2 set3
 		//set2
-		}
+
 		
 		
 	}
