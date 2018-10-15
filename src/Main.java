@@ -1,4 +1,4 @@
-package src;
+//package src;
 
 import java.io.PrintStream;
 import java.math.BigInteger;
@@ -86,9 +86,11 @@ public class Main  {
 	boolean statement(Scanner in, HashMap hashTable) {
 		if(nextCharIs(in, '?')) {
 			print_statement(in, hashTable);
+			in.nextLine();
 		}
 		else if(nextCharIsLetter(in)) {
 			assignment(in, hashTable);
+			in.nextLine();
 		}
 		else {
 			System.out.println("Incorrect input command");
@@ -99,7 +101,7 @@ public class Main  {
 	}
 
 	void assignment (Scanner in, HashMap hashTable) {
-		Identifier ident = Identifier(in);
+		Identifier ident = read_identifier(in);
 		BigInteger hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
 	}
 
@@ -166,6 +168,7 @@ public class Main  {
 		else if(nextCharIsLetter(in)){
 			read_identifier(in);
 		}
+		return true;
 	}
 
 	Set read_complex_factor(Scanner in){
