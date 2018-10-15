@@ -1,4 +1,4 @@
-//package src;
+package src;
 
 import java.io.PrintStream;
 import java.math.BigInteger;
@@ -39,7 +39,7 @@ public class Main  {
         return true;
     }
     
-    Set factor(Scanner in, HashMap hashTable) throws APException{
+    Set factor(Scanner in, HashMap hashTable){
     	Set<BigInteger> createdSet = new Set<>();
     	if (nextCharIsLetter(in)) {
     		Identifier ident = read_identifier(in);
@@ -92,6 +92,8 @@ public class Main  {
 			assignment(in, hashTable);
 			in.nextLine();
 		}
+		else if(nextCharIs(in, '/'))
+			read_comment(in);
 		else {
 			System.out.println("Incorrect input command");
 			in.nextLine();
@@ -115,12 +117,12 @@ public class Main  {
 	}
 
 	void print_statement(Scanner in, HashMap hashTable){
-		do{
-			read_expression(in);
-		}while(read_expression(in));
+		read_expression(in).printSet();
 	}
 
-	void read_comment(Scanner in){}
+	void read_comment(Scanner in){
+    	in.nextLine();
+	}
 
 	Identifier read_identifier(Scanner in) {
 		nextChar(in);
@@ -132,12 +134,12 @@ public class Main  {
 				ident.add(nextChar(in));
 				checker = 1;
 			}
-			else if(nextCharIsNaturalNumber(in) && checker != 0) {
+			else if(nextCharIsNaturalNumber(in) && checker != 0)
 				ident.add(nextChar(in));
-			}
-			else if (nextCharIs(in, ' ')) {
+
+			else if (nextCharIs(in, ' '))
 				nextChar(in);
-			}
+
 			else if (nextCharIsAdditiveOperator(in) | nextCharIsAdditiveOperator(in) | nextCharIs(in, '=') ) {
 				nextChar(in);
 				checker =2;
@@ -149,91 +151,58 @@ public class Main  {
 		}while(checker!=2);
 		return ident;
 	}
+
 // expression>term>factor>complexfactor>expression>term....
-	boolean read_expression(Scanner in){
-		while(read_term(in)){
-			read_term(in);
-			return true;
+	Set read_expression(Scanner in){
+    	Set<BigInteger> expressionSet = read_term(in);
+    	Set<BigInteger> setToAdd;
+    	if(nextCharIsAdditiveOperator(in)){
+    		setToAdd = read_term(in);
+    		if(nextCharIs(in, '+'))
+    			return (Set) expressionSet.intersection(setToAdd);
+
+			else if(nextCharIs(in, '-'))
+    			return (Set) expressionSet.difference(setToAdd);
+
+			else if(nextCharIs(in, '|'))
+    			return (Set) expressionSet.symmetricDifference(setToAdd);
 		}
-		return false;
+
+		return expressionSet;
 	}
 
-	boolean read_term(Scanner in){
-		while(read_factor(in)){
-			read_factor(in);
-			return true;
+
+	Set read_term(Scanner in){
+    	Set<BigInteger> termSet = read_factor(in);
+		Set<BigInteger> setToMultiply;
+		if(nextCharIsMultiplicativeOperator(in)) {
+			setToMultiply = read_factor(in);
+			termSet.intersection(setToMultiply);
 		}
 
-		return false;
+		return  termSet;
 	}
-//A+B*C-D*(E+F*G)
-	//call expression on A
-	//call term on A
-	//call factor on A, factor returns A
-	//term returns A
-	//expression has A now
-	//moves onto next term to add to A, reads until next addative: B*C
-	//call term on B*C
-	//term reads until muliplicative, reads until B
-	//call factor on B
-	//return set B
-	//moves onto next term to multi with B, reads until end: C
-	//calls factor on C
-	//factor returns set C
-	//term resolves B*C since it has both sets and returns the set to expression
-	//expression now has set A and the set resulting of B*C : BC
-//A+BC-D*(E+F*G)
-	//expression having both sets returned can add them together forming ABC
-//ABC-D*(E+F*G)
-	//ABC is now set1, read next term : D*(E+F*G)
-	//this gets sent to term
-	//term splits D and calls factor on D
-	//factor returns set D
-	//term now has set1=D and for set2 calls factor on term (E+F*G)
-	//factor calls complex factor on E+F*G
-	//complex factor calls expression on E+F*G
-	//expression calls term on E
-	//term calls factor on E
-	//factor returns E, which goes up to term which returns E to expression
-	//expression now has set1=E and calls term on F*G
-	//term calls factor on F
-	//factor returns set F
-	//term has set1=F and calls factor on G
-	//factor returns set G
-	//term has set1=F and set2=G, resolves to set FG and returns
-	//expression now has set1=E set2=FG
-//ABC-D*(E+FG)
-	//expression resolves E+FG and gets EFG returns it to complex factor
-//ABC-D*(EFG)
-	//complex factor returns EFG to factor
-	//factor returns set EFG to term
-	//term now has set1=D set2=EFG and resolves to DEFG
-	//returns to expression
-//ABC-DEFG
-	//expression now has set1=ABC and set2=DEFG
-	//resolves to ABCDEFG
-//ABCDEFG
-	//expression has no more opperators and returns set ABCDEFG
-	//assignment takes this set and assignes it to input
-	boolean read_factor(Scanner in){
+
+	Set read_factor(Scanner in){
+    	Set<BigInteger> createdSet = new Set<>();
 		if(nextCharIs(in, '(')){
 			read_complex_factor(in);
 		}
 		else if(nextCharIs(in, '{')){
-			Set<BigInteger> createdSet = read_set(in);
+			createdSet = read_set(in);
 		}
 		else if(nextCharIsLetter(in)){
 			read_identifier(in);
-			
+			// find identifier's set, put it in createdSet and return
 			//set of said identifier
 		}
-		return true;
+		return createdSet;
 	}
 
 	Set read_complex_factor(Scanner in){
     	Set<BigInteger> newSet1 = new Set<>();
     	Set<BigInteger> newSet2 = new Set<>();
-    	Set<BigInteger> calculatedSet = new Set<>();
+    	Set<BigInteger> calculatedSet;
 
     	while(in.hasNext()){
     		// Reads a identifier
