@@ -1,4 +1,4 @@
-package src;
+
 /*
  * elements: objects of type E
  * structure: linear

@@ -1,5 +1,3 @@
-package src;
-
 import java.io.PrintStream;
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -9,76 +7,74 @@ import java.util.regex.Pattern;
 public class Main  {
 	PrintStream out;
 
-    private void start() {
-        // Create a scanner on System.in
-        // While there is input, read line and parse it.
-    	//the "Set" is a placeholder, this is the type our hasmap will hold im fairly sure it should be the sets though
-    	HashMap<BigInteger, Set> hashTable = new HashMap<BigInteger, Set>();
-    	
-    	Scanner in = new Scanner(System.in);
-        in.useDelimiter("");
-        while(parserChecker(in, hashTable)) {
+	private void start() {
+		// Create a scanner on System.in
+		// While there is input, read line and parse it.
+		//the "Set" is a placeholder, this is the type our hash map will hold im fairly sure it should be the sets though
+		HashMap<BigInteger, Set> hashTable = new HashMap<BigInteger, Set>();
+
+		Scanner in = new Scanner(System.in);
+		in.useDelimiter("");
+        /*while(parserChecker(in, hashTable)) {
     	   System.out.println("Parsed a line");
 
-       }
-        
-        
-    }
+       }*/
+	}
 
-    public static void main(String[] argv) {
-        new Main().start();
-    }
+	public static void main(String[] argv) {
+		new Main().start();
+	}
 
-    boolean parserChecker(Scanner in, HashMap hashTable) {
-    	do {
-            if (! in.hasNextLine()) {
-                out.printf("\n"); // otherwise line with ^D will be overwritten
-                return false;
-            }
-        } while (! statement(in, hashTable));
-        return true;
-    }
+	boolean parserChecker(Scanner in, HashMap hashTable) {
+		do {
+			if (! in.hasNextLine()) {
+				out.printf("\n"); // otherwise line with ^D will be overwritten
+				return false;
+			}
+		} while (! statement(in, hashTable));
+		return true;
+	}
 
 	Set<BigInteger> factor(Scanner in, HashMap hashTable){
-    	Set<BigInteger> createdSet = new Set<>();
+		Set<BigInteger> createdSet = new Set<>();
 
-    	if (nextCharIsLetter(in)) {
-    		Identifier ident = read_identifier(in);
-    		return setHashTableFinder(ident, hashTable);
-    		//retrieve the set that belongs with that identifier
-    	}
-    	else if(nextCharIs(in, '{')) {
-    		createdSet = read_set(in);
-    	}
-    	else if(nextCharIs(in, '(')) {
-    		createdSet = read_complex_factor(hashTable, in);
-    	}
-    	else {
-    		//throw exception here
-    	}
+		if (nextCharIsLetter(in)) {
+			Identifier ident = read_identifier(in);
+			return setHashTableFinder(ident, hashTable);
+			//retrieve the set that belongs with that identifier
+		}
+		else if(nextCharIs(in, '{')) {
+			createdSet = read_set(in);
+		}
+		else if(nextCharIs(in, '(')) {
+			createdSet = read_complex_factor(hashTable, in);
+		}
+		else {
+			//throw exception here
+		}
 		return createdSet;
-    }
+	}
 
 	Set<BigInteger> setHashTableFinder(Identifier ident, HashMap hashTable) {
-    	Set<BigInteger> set1 = null;
-    	BigInteger hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
-        for (Object name: hashTable.keySet()){
-            if (hashCodeOfSet.equals(name)) {
-                System.out.println("Found a key");
-                set1 = (Set) hashTable.get(hashCodeOfSet);
-            }
-        }
-        if (set1==null) {
-        	//throw error
-        }
-        return set1;
-    }
+		Set<BigInteger> set1 = null;
+		BigInteger hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
+		for (Object name: hashTable.keySet()){
+			if (hashCodeOfSet.equals(name)) {
+				System.out.println("Found a key");
+				set1 = (Set) hashTable.get(hashCodeOfSet);
+			}
+		}
+		if (set1==null) {
+			//throw error
+		}
+		return set1;
+	}
 
     /*
     Set<BigInteger> setReaderMaker (HashMap hashTable, Scanner in) {
     	Set<BigInteger> set1 = new Set<>();
     	nextChar(in);
-    	
+
     	if (nextCharIsPositiveNumber(in)) {
     		System.out.printf("Test");
     	}
@@ -105,9 +101,9 @@ public class Main  {
 	}
 
 	void assignment (Scanner in, HashMap hashTable) {
-    	Set<BigInteger> toIdent = read_expression(hashTable, in);
 		Identifier ident = read_identifier(in);
 		BigInteger hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
+		Set<BigInteger> toIdent = read_expression(hashTable, in);
 
 		// Hash table contains the key
 		if(hashTable.containsKey(hashCodeOfSet))
@@ -121,16 +117,15 @@ public class Main  {
 	}
 
 	void read_comment(Scanner in){
-    	in.nextLine();
+		in.nextLine();
 	}
 
 	// Creates the identifier
 	Identifier read_identifier(Scanner in) {
-		nextChar(in);
+		//nextChar(in);
 		Identifier ident = new Identifier();
 		int checker = 0;
 		do {
-
 			if(nextCharIsLetter(in)) {
 				ident.add(nextChar(in));
 				checker = 1;
@@ -138,34 +133,36 @@ public class Main  {
 			else if(nextCharIsNaturalNumber(in) && checker != 0)
 				ident.add(nextChar(in));
 
+				// Skips the spaces
 			else if (nextCharIs(in, ' '))
 				nextChar(in);
 
-			else if (nextCharIsAdditiveOperator(in) | nextCharIsAdditiveOperator(in) | nextCharIs(in, '=') ) {
-				nextChar(in);
-				checker =2;
+			else if (nextCharIs(in, '=') ) {
+				nextChar(in);						// Scanner now is after '='
+				checker = 2;
 			}
 			else {
 				System.out.println("Invalid input, bad name formatting");
 			}
 
 		}while(checker!=2);
+		System.out.printf("IDENT = %s\n", ident);
 		return ident;
 	}
 
 	Set<BigInteger> read_expression(HashMap hashTable, Scanner in){
-    	Set<BigInteger> expressionSet = read_term(hashTable, in);
-    	Set<BigInteger> setToAdd;
-    	while(nextCharIsAdditiveOperator(in)){
-    		setToAdd = read_term(hashTable, in);
-    		if(nextCharIs(in, '+'))
-    			return (Set) expressionSet.intersection(setToAdd);
+		Set<BigInteger> expressionSet = read_term(hashTable, in);
+		Set<BigInteger> setToAdd;
+		while(nextCharIsAdditiveOperator(in)){
+			setToAdd = read_term(hashTable, in);
+			if(nextCharIs(in, '+'))
+				return (Set) expressionSet.intersection(setToAdd);
 
 			else if(nextCharIs(in, '-'))
-    			return (Set) expressionSet.difference(setToAdd);
+				return (Set) expressionSet.difference(setToAdd);
 
 			else if(nextCharIs(in, '|'))
-    			return (Set) expressionSet.symmetricDifference(setToAdd);
+				return (Set) expressionSet.symmetricDifference(setToAdd);
 		}
 
 		return expressionSet;
@@ -173,7 +170,7 @@ public class Main  {
 
 
 	Set<BigInteger> read_term(HashMap hashTable, Scanner in){
-    	Set<BigInteger> termSet = read_factor(hashTable, in);
+		Set<BigInteger> termSet = read_factor(hashTable, in);
 		Set<BigInteger> setToMultiply;
 
 		if(nextCharIsMultiplicativeOperator(in)) {
@@ -185,7 +182,7 @@ public class Main  {
 	}
 
 	Set<BigInteger> read_factor(HashMap hashTable, Scanner in){
-    	Set<BigInteger> createdSet = new Set<>();
+		Set<BigInteger> createdSet = new Set<>();
 		if(nextCharIs(in, '(')){
 			read_complex_factor(hashTable, in);
 		}
@@ -204,11 +201,11 @@ public class Main  {
 	}
 
 	Set<BigInteger> read_complex_factor(HashMap hashTable, Scanner in){
-    	return read_expression(hashTable, in);
+		return read_expression(hashTable, in);
 	}
 
 	Set<BigInteger> read_set(Scanner in){
-    	Set<BigInteger> newSet = new Set<>();
+		Set<BigInteger> newSet = new Set<>();
 		while(!nextCharIs(in, '}')){
 			read_row_natural_numbers(in, newSet);
 		}
@@ -216,8 +213,8 @@ public class Main  {
 	}
 
 	void read_row_natural_numbers(Scanner in, Set newSet){
-    	StringBuffer natNumb = new StringBuffer();
-    	while(in.hasNext()) {
+		StringBuffer natNumb = new StringBuffer();
+		while(in.hasNext()) {
 			while (!nextCharIs(in, ',')) {
 				natNumb.append(in.next());
 			}
@@ -228,36 +225,36 @@ public class Main  {
 	}
 
 	boolean nextCharIsAdditiveOperator(Scanner in){
-    	if(nextCharIs(in, '+')){
-    		return true;
+		if(nextCharIs(in, '+')){
+			return true;
 		}
 		else if(nextCharIs(in, '|')){
-    		return true;
+			return true;
 		}
 		else if(nextCharIs(in, '-')){
-    		return true;
+			return true;
 		}
 		return false;
 	}
 
 	boolean nextCharIsMultiplicativeOperator(Scanner in){
-    	if(nextCharIs(in, '*'))
-    		return true;
-    	return false;
+		if(nextCharIs(in, '*'))
+			return true;
+		return false;
 	}
 
 	boolean nextCharIsNaturalNumber(Scanner in){
-    	if(nextCharIsPositiveNumber(in) || nextCharIsZero(in))
-    		return true;
+		if(nextCharIsPositiveNumber(in) || nextCharIsZero(in))
+			return true;
 
-    	return false;
+		return false;
 	}
 
 	public boolean nextCharIsZero(Scanner in){
 		return in.hasNext("[0]");
 	}
 
-	public boolean nextCharIsPositiveNumber(Scanner in){
+	boolean nextCharIsPositiveNumber(Scanner in){
 		return in.hasNext("[1-9]");
 	}
 

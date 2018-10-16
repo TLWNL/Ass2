@@ -9,7 +9,6 @@
  *     <dt><b>POST-condition</b></dr>   The new Identifier-object is empty
  * </dl>
  **/
-package src;
 
 public interface IdentInterface{
 
