@@ -38,9 +38,10 @@ public class Main  {
         } while (! statement(in, hashTable));
         return true;
     }
-    
-    Set factor(Scanner in, HashMap hashTable){
+
+	Set<BigInteger> factor(Scanner in, HashMap hashTable){
     	Set<BigInteger> createdSet = new Set<>();
+
     	if (nextCharIsLetter(in)) {
     		Identifier ident = read_identifier(in);
     		return setHashTableFinder(ident, hashTable);
@@ -50,15 +51,15 @@ public class Main  {
     		createdSet = read_set(in);
     	}
     	else if(nextCharIs(in, '(')) {
-    		createdSet = read_complex_factor(in);
+    		createdSet = read_complex_factor(hashTable, in);
     	}
     	else {
     		//throw exception here
     	}
 		return createdSet;
     }
-    
-    Set setHashTableFinder(Identifier ident, HashMap hashTable) {
+
+	Set<BigInteger> setHashTableFinder(Identifier ident, HashMap hashTable) {
     	Set<BigInteger> set1 = null;
     	BigInteger hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
         for (Object name: hashTable.keySet()){
@@ -72,8 +73,9 @@ public class Main  {
         }
         return set1;
     }
-    
-    Set setReaderMaker (HashMap hashTable, Scanner in) {
+
+    /*
+    Set<BigInteger> setReaderMaker (HashMap hashTable, Scanner in) {
     	Set<BigInteger> set1 = new Set<>();
     	nextChar(in);
     	
@@ -81,7 +83,7 @@ public class Main  {
     		System.out.printf("Test");
     	}
     	return  set1;
-    }
+    }*/
 
 	boolean statement(Scanner in, HashMap hashTable) {
 		if(nextCharIs(in, '?')) {
@@ -103,7 +105,7 @@ public class Main  {
 	}
 
 	void assignment (Scanner in, HashMap hashTable) {
-    	Set<BigInteger> toIdent = read_expression(in);
+    	Set<BigInteger> toIdent = read_expression(hashTable, in);
 		Identifier ident = read_identifier(in);
 		BigInteger hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
 
@@ -112,25 +114,17 @@ public class Main  {
 			hashTable.replace(hashCodeOfSet, toIdent);
 		else
 			hashTable.put(hashCodeOfSet, toIdent);
-		//return the set assigned to said hash
-		//set2 created
-
-		//set3
-		//set2 set3
-		//set2
-
-		
-		
 	}
 
 	void print_statement(Scanner in, HashMap hashTable){
-		read_expression(in).printSet();
+		read_expression(hashTable, in).printSet();
 	}
 
 	void read_comment(Scanner in){
     	in.nextLine();
 	}
 
+	// Creates the identifier
 	Identifier read_identifier(Scanner in) {
 		nextChar(in);
 		Identifier ident = new Identifier();
@@ -159,12 +153,11 @@ public class Main  {
 		return ident;
 	}
 
-// expression>term>factor>complexfactor>expression>term....
-	Set read_expression(Scanner in){
-    	Set<BigInteger> expressionSet = read_term(in);
+	Set<BigInteger> read_expression(HashMap hashTable, Scanner in){
+    	Set<BigInteger> expressionSet = read_term(hashTable, in);
     	Set<BigInteger> setToAdd;
-    	if(nextCharIsAdditiveOperator(in)){
-    		setToAdd = read_term(in);
+    	while(nextCharIsAdditiveOperator(in)){
+    		setToAdd = read_term(hashTable, in);
     		if(nextCharIs(in, '+'))
     			return (Set) expressionSet.intersection(setToAdd);
 
@@ -179,83 +172,42 @@ public class Main  {
 	}
 
 
-	Set read_term(Scanner in){
-    	Set<BigInteger> termSet = read_factor(in);
+	Set<BigInteger> read_term(HashMap hashTable, Scanner in){
+    	Set<BigInteger> termSet = read_factor(hashTable, in);
 		Set<BigInteger> setToMultiply;
+
 		if(nextCharIsMultiplicativeOperator(in)) {
-			setToMultiply = read_factor(in);
+			setToMultiply = read_factor(hashTable, in);
 			termSet.intersection(setToMultiply);
 		}
 
 		return  termSet;
 	}
 
-	Set read_factor(Scanner in){
+	Set<BigInteger> read_factor(HashMap hashTable, Scanner in){
     	Set<BigInteger> createdSet = new Set<>();
 		if(nextCharIs(in, '(')){
-			read_complex_factor(in);
+			read_complex_factor(hashTable, in);
 		}
 		else if(nextCharIs(in, '{')){
 			createdSet = read_set(in);
 		}
 		else if(nextCharIsLetter(in)){
-			read_identifier(in);
-			// find identifier's set, put it in createdSet and return
-			//set of said identifier
+			Identifier toFind = read_identifier(in);
+			if(hashTable.get(toFind) == null){
+				System.out.printf("ERROR, IDENTIFIER NOT FOUND\n");
+			}
+			else
+				createdSet = (Set<BigInteger>) hashTable.get(toFind);
 		}
 		return createdSet;
 	}
 
-	Set read_complex_factor(Scanner in){
-    	Set<BigInteger> newSet1 = new Set<>();
-    	Set<BigInteger> newSet2 = new Set<>();
-    	Set<BigInteger> calculatedSet;
-
-    	while(in.hasNext()){
-    		// Reads a identifier
-    		if(nextCharIsLetter(in)){
-    			// find Identifer from hashmap
-			}
-			// Reads a set
-			else if(nextCharIs(in, '{')){
-    			if(newSet1.isEmpty())
-    				newSet1 = read_set(in);
-    			else
-					newSet2 = read_set(in);
-			}
-
-			else if(nextCharIsMultiplicativeOperator(in)){
-    			calculatedSet = (Set<BigInteger>) newSet1.intersection(newSet2);
-    			newSet1.initSet();
-    			newSet2.initSet();
-    			newSet1 = calculatedSet;
-			}
-
-			else if(nextCharIsAdditiveOperator(in)){
-    			if(nextCharIs(in, '+')){
-    				calculatedSet = (Set<BigInteger>) newSet1.union(newSet2);
-    				newSet1.initSet();
-    				newSet2.initSet();
-    				newSet1 = calculatedSet;
-				}
-				else if(nextCharIs(in, '-')){
-    				calculatedSet = (Set<BigInteger>) newSet1.difference(newSet2);
-					newSet1.initSet();
-					newSet2.initSet();
-					newSet1 = calculatedSet;
-				}
-				else if(nextCharIs(in, '|')){
-    				calculatedSet = (Set<BigInteger>) newSet1.symmetricDifference(newSet2);
-					newSet1.initSet();
-					newSet2.initSet();
-					newSet1 = calculatedSet;
-				}
-			}
-		}
-		return newSet1;
+	Set<BigInteger> read_complex_factor(HashMap hashTable, Scanner in){
+    	return read_expression(hashTable, in);
 	}
 
-	Set read_set(Scanner in){
+	Set<BigInteger> read_set(Scanner in){
     	Set<BigInteger> newSet = new Set<>();
 		while(!nextCharIs(in, '}')){
 			read_row_natural_numbers(in, newSet);
