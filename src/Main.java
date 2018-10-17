@@ -15,10 +15,10 @@ public class Main  {
 
 		Scanner in = new Scanner(System.in);
 		in.useDelimiter("");
-        /*while(parserChecker(in, hashTable)) {
+        while(parserChecker(in, hashTable)) {
     	   System.out.println("Parsed a line");
 
-       }*/
+       }
 	}
 
 	public static void main(String[] argv) {
@@ -104,7 +104,6 @@ public class Main  {
 		Identifier ident = read_identifier(in);
 		BigInteger hashCodeOfSet = BigInteger.valueOf(ident.getIdent().hashCode());
 		Set<BigInteger> toIdent = read_expression(hashTable, in);
-
 		// Hash table contains the key
 		if(hashTable.containsKey(hashCodeOfSet))
 			hashTable.replace(hashCodeOfSet, toIdent);
@@ -113,6 +112,7 @@ public class Main  {
 	}
 
 	void print_statement(Scanner in, HashMap hashTable){
+		nextChar(in);
 		read_expression(hashTable, in).printSet();
 	}
 
@@ -126,6 +126,7 @@ public class Main  {
 		Identifier ident = new Identifier();
 		int checker = 0;
 		do {
+			
 			if(nextCharIsLetter(in)) {
 				ident.add(nextChar(in));
 				checker = 1;
@@ -137,11 +138,18 @@ public class Main  {
 			else if (nextCharIs(in, ' '))
 				nextChar(in);
 
-			else if (nextCharIs(in, '=') ) {
+			else if (nextCharIs(in, '=')) {
 				nextChar(in);						// Scanner now is after '='
 				checker = 2;
 			}
+			else if(nextCharIsAdditiveOperator(in) || nextCharIsMultiplicativeOperator(in)) {
+				checker = 2;
+			}
 			else {
+				if((String.valueOf(nextChar(in)).matches("\r"))) {
+					checker = 2;
+					break;
+				}
 				System.out.println("Invalid input, bad name formatting");
 			}
 
@@ -154,17 +162,23 @@ public class Main  {
 		Set<BigInteger> expressionSet = read_term(hashTable, in);
 		Set<BigInteger> setToAdd;
 		while(nextCharIsAdditiveOperator(in)){
-			setToAdd = read_term(hashTable, in);
-			if(nextCharIs(in, '+'))
-				return (Set) expressionSet.intersection(setToAdd);
-
-			else if(nextCharIs(in, '-'))
-				return (Set) expressionSet.difference(setToAdd);
-
-			else if(nextCharIs(in, '|'))
-				return (Set) expressionSet.symmetricDifference(setToAdd);
+			
+			if(nextCharIs(in, '+')) {
+				nextChar(in);
+				setToAdd = read_term(hashTable, in);
+				expressionSet = (Set) expressionSet.union(setToAdd);
+			}
+			else if(nextCharIs(in, '-')) {
+				nextChar(in);
+				setToAdd = read_term(hashTable, in);
+				expressionSet = (Set) expressionSet.difference(setToAdd);
+			}
+			else if(nextCharIs(in, '|')) {
+				nextChar(in);
+				setToAdd = read_term(hashTable, in);
+				expressionSet = (Set) expressionSet.symmetricDifference(setToAdd);
+			}
 		}
-
 		return expressionSet;
 	}
 
@@ -172,12 +186,11 @@ public class Main  {
 	Set<BigInteger> read_term(HashMap hashTable, Scanner in){
 		Set<BigInteger> termSet = read_factor(hashTable, in);
 		Set<BigInteger> setToMultiply;
-
 		if(nextCharIsMultiplicativeOperator(in)) {
+			nextChar(in);
 			setToMultiply = read_factor(hashTable, in);
-			termSet.intersection(setToMultiply);
+			termSet = (Set)termSet.intersection(setToMultiply);
 		}
-
 		return  termSet;
 	}
 
@@ -189,13 +202,15 @@ public class Main  {
 		else if(nextCharIs(in, '{')){
 			createdSet = read_set(in);
 		}
+		
 		else if(nextCharIsLetter(in)){
 			Identifier toFind = read_identifier(in);
-			if(hashTable.get(toFind) == null){
+			BigInteger toFinder = BigInteger.valueOf(toFind.getIdent().hashCode());
+			if(hashTable.get(toFinder) == null){
 				System.out.printf("ERROR, IDENTIFIER NOT FOUND\n");
 			}
 			else
-				createdSet = (Set<BigInteger>) hashTable.get(toFind);
+				createdSet = (Set<BigInteger>) hashTable.get(toFinder);
 		}
 		return createdSet;
 	}
@@ -214,14 +229,20 @@ public class Main  {
 
 	void read_row_natural_numbers(Scanner in, Set newSet){
 		StringBuffer natNumb = new StringBuffer();
-		while(in.hasNext()) {
+		
+		do{
+			nextChar(in);
 			while (!nextCharIs(in, ',')) {
 				natNumb.append(in.next());
+				if(nextCharIs(in,'}')) {
+					break;
+				}
 			}
+			
 			String toAdd = natNumb.toString();
 			natNumb.delete(0,natNumb.length());			// May have to change it to length-1
 			newSet.add(new BigInteger(toAdd));
-		}
+		}while(!nextCharIs(in, '}'));
 	}
 
 	boolean nextCharIsAdditiveOperator(Scanner in){
