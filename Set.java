@@ -115,7 +115,7 @@ public class Set<E extends Comparable<E>> implements SetInterface<E> {
         this.wrapperList.goToFirst();
         unionSet.copyElements((Set<E>)set2);        // Adds the entire second set
 
-        while(this.wrapperList.goToNext()){
+        for(int i = 0; i<this.size; i++){
             if(unionSet.find(this.wrapperList.retrieve()))    // Duplicate element, so go to next
                 this.wrapperList.goToNext();
             else{
